@@ -1,0 +1,104 @@
+<%- contentFor('header') %>
+<%- contentFor('body') %>
+
+<script type="text/javascript">
+  document.getElementById('profile').className = 'nav-item';
+  document.getElementById('history').className = 'nav-item active';
+
+  document.getElementById('list').setAttribute("href", "/history");
+  document.getElementById('map').setAttribute("href", "javascript:void(0);");
+
+  var rides = JSON.parse('<%- rides %>');
+  if(rides.length < 1)
+  {
+      document.getElementById('tbView').style.display = "none";
+  }
+</script>
+
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDttwJuOCpZf_rUS_EuCeiaOYaJ7HN6ffY&callback=initialize"></script>
+
+<script>
+function initialize() {
+  var rides = JSON.parse('<%- rides %>');
+  
+  if(rides.length < 1)
+  {
+    var lat = 0;
+    var lng = 0;
+    navigator.geolocation.getCurrentPosition(function(location) {
+      lat = location.coords.latitude;
+      lng = location.coords.longitude;
+      
+      var mapProp = {
+        center: { lat: lat, lng:lng },
+        zoom: 10,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+      return;
+    });
+  }
+
+  var myLatLng = {lat: rides[0].City.Latitude, lng: rides[0].City.Longitude};
+
+  var mapProp = {
+    center: myLatLng,
+    zoom: 5,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+  rides.forEach(ride => {
+    var marker = new google.maps.Marker({
+      position: { lat: ride.City.Latitude, lng: ride.City.Longitude },
+      map: map,
+      title: ride.City.Name
+    });
+
+    var contentString = '<div class="info-window">' +
+                  '<h6>Ride Details</h6>' +
+                  '<div class="info-content"><p> Ride with Uber in ' +
+                  ride.City.Name + '<br/>' +
+                  '</p></div>' +
+                  '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        maxWidth: 400
+    });
+
+    marker.addListener('click', function () {
+        infowindow.open(map, marker);
+    });
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+
+<h2>Ride History (Map View)</h2>
+<form method="get" action="/synchistory">
+   
+  <div class="alert alert-success" role="alert">
+    <input type="submit" value="Sync Rides" class="btn btn-success" />
+    <br><br>
+    No. of Rides you have enjoyed: <%= JSON.parse(rides).length %> 
+  </div>
+
+</form>
+
+<div id="tbView" class="well">       
+    <div class="btn-group" style="float:right;">
+        <a id="list" class="btn btn-default btn-sm">
+            List View</a> |
+        <a id="map" class="btn btn-default btn-sm">
+            Map View</a>
+    </div>
+</div>
+
+<div id="googleMap" style="width:100%; height:320px;"></div>
+
+<%- contentFor('footer') %>

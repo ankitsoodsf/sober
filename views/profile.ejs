@@ -1,0 +1,27 @@
+<%- contentFor('header') %>
+<%- contentFor('body') %>
+
+<script type="text/javascript">
+  document.getElementById('profile').className = 'nav-item active';
+  document.getElementById('history').className = 'nav-item';
+</script>
+
+<div class="container">
+        <div class="row">
+          <div class="col-md-4 img">
+            <img src="<%= Picture %>"  alt="<%= FullName %> Photo" class="img-rounded img-thumbnail">
+          </div>
+          <div class="col-md-8 details">
+                <blockquote>
+                <h4> <%= FullName %></h4>
+                <small><cite title="Source Title"><%= Email %><i class="icon-map-marker"></i></cite></small>
+                </blockquote>
+                <p> Promo Code: <%= PromoCode %> <br>
+                Mobile Verified: <%= MobileVerified %>
+                
+                </p>
+        </div>
+    </div>
+</div>
+
+<%- contentFor('footer') %>

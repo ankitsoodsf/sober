@@ -1,0 +1,67 @@
+<%- contentFor('header') %>
+<%- contentFor('body') %>
+
+<script type="text/javascript">
+    document.getElementById('profile').className = 'nav-item';
+    document.getElementById('history').className = 'nav-item active';
+
+    document.getElementById('list').setAttribute("href", "javascript:void(0);");
+    document.getElementById('map').setAttribute("href", "/mapview");
+
+    var rides = JSON.parse('<%- rides %>');
+    if(rides.length < 1)
+    {
+        document.getElementById('tbView').style.display = "none";
+        document.getElementById('tbHistory').style.display = "none";
+        document.getElementById('tbMessage').style.display = "block";
+    }
+</script>
+<h2>Ride History</h2>
+<form method="get" action="/synchistory">
+   
+   <div class="alert alert-success" role="alert">
+        <input type="submit" value="Sync Rides" class="btn btn-success" />
+        <br><br>
+        No. of Rides you have enjoyed: <%= JSON.parse(rides).length %> 
+      </div>
+
+</form>
+
+<div id="tbMessage" style="display:none">
+    No records found
+</div>
+
+<div id="tbView" class="well">       
+    <div class="btn-group" style="float:right;">
+        <a id="list" class="btn btn-default btn-sm">
+            List View</a> |
+        <a id="map" class="btn btn-default btn-sm">
+            Map View</a>
+    </div>
+</div>
+
+<div id="tbHistory" class="table-responsive">
+        
+<table class="table table-striped table-hover table-md ">
+<thead class="thead-dark">  
+<tr>
+    <th>City</th>
+    <th>Distance (in km)</th>
+    <th>Time</th>
+    <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<% JSON.parse(rides).forEach(function(ride, index) { %>
+    <tr>
+        <td><%= ride.City.Name %></td>
+        <td><%= ride.Distance %></td>
+        <td><%= ride.StartTime %></td>
+        <td><%= ride.Status %></td>
+    </tr>
+
+<% }); %>
+</tbody>
+</table>
+</div>
+<%- contentFor('footer') %>
