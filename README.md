@@ -6,7 +6,7 @@ Sober is an application that lets user login using there Uber account and check 
 ## Installation
 
 Before you begin, you need to register your app in the [Uber developer dashboard](https://developer.uber.com/dashboard). Notice that the app gets a client ID, secret, and server token required for authenticating with the API.
-This information has to be added in the config.js file.
+This information can be updated in the server.js file.
 
 Next, initialize the Uber object with the keys you obtained from the [Uber developer dashboard](https://developer.uber.com/dashboard):
 
