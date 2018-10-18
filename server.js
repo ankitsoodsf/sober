@@ -148,32 +148,6 @@ app.get('/synchistory', function(req,res){
 
     getUberHistory(req.session.rider_id, 0, 0, limit);
     res.redirect('/history');
-
-    // async.until(() => (fetched < count),
-    //             getUberHistory(req.session.rider_id, 0, 0, limit),
-    //             function(){
-    //                 res.redirect('/history');
-    //             }
-    //  );
-
-    // var response = res;
-    // getUberHistory(req.session.rider_id, 0, 0, limit, function(err,results){
-    //     res.redirect('/history');
-    // });
-
-    // async.waterfall([
-
-    //     function(cb) {
-    //         getUberHistory(req.session.rider_id, 0, 0, limit, cb);
-    //     },
-    //     function(results, cb)
-    //     {
-    //         cb(null);
-    //     }
-
-    // ], function(err, results){
-    //     res.redirect('/history');
-    // });
 });
 
 //Get Ride history from Uber
@@ -228,7 +202,7 @@ app.get('*',function(req,res){
 });
 
 app.use(function(req, res, next){
-    res.redirect('error');
+    res.redirect('/error');
 });
 
 app.listen(8080);
