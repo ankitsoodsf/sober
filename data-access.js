@@ -5,18 +5,19 @@ var common = require("./common");
 
 //Insert User in MongoDb
 exports.insertUser = function(object){
+    
     MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, db) {
         if (err) {
             return 0;
         }
         var dbo = db.db('Sober');
         var data = object;
-        var query = { Email: data.email };
+        var query = { RiderId: data.rider_id };
         dbo.collection("User").find(query).toArray(function(err, result) {
             if (err) {
                 return 0;
             }
-
+            
             if(result.length == 0)
             {
                 var myobj = {
@@ -26,7 +27,24 @@ exports.insertUser = function(object){
                     Picture: data.picture,
                     PromoCode: data.promo_code,
                     MobileVerified: data.mobile_verified };
+
                 dbo.collection("User").insertOne(myobj, function(err, res) {
+                    if (err) {
+                        return 0;
+                    }
+                    db.close();
+                });
+            }
+            else
+            {
+                var myobj = { $set: {
+                    FullName: data.first_name + " " + data.last_name,
+                    Email: data.email,
+                    Picture: data.picture,
+                    PromoCode: data.promo_code,
+                    MobileVerified: data.mobile_verified }};
+
+                dbo.collection("User").updateOne(query, myobj, function(err, res) {
                     if (err) {
                         return 0;
                     }

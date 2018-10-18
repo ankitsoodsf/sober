@@ -8,7 +8,8 @@
 
   <%- style %>
 </head>
-<body>  
+<body>
+  <% if(login == true) { %>
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container">
       <a class="navbar-brand" href="javascript:void(0);">
@@ -32,10 +33,24 @@
     </div>
   </nav>
 
-   <div class="jumbotron container">
-     <br>
+  <div class="jumbotron container">
       <%- body %>
   </div>
+  <% } %>
+
+  <% if(login == false) { %>
+    <nav class="navbar navbar-dark fixed-top bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="javascript:void(0);">UBER</a>
+        </div>
+    </nav>
+    <div class="clearfix"></div><br/>
+
+    <div class="container">
+        <%- body %>
+    </div>
+  <% } %>
+
   <footer class="container">
     <%- defineContent('footer') %>
     <p>&copy; Sober, 2018</p>
