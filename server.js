@@ -7,7 +7,7 @@ var path = require('path');
 var Uber = require('node-uber');
 var url = require('url');
 var session = require('cookie-session');
-var dataAccess = require('./data-access');
+var dataAccess = require('./datalayer/data-access');
 var async = require('async');
 
 //Create new Uber instance

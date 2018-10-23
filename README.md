@@ -25,7 +25,7 @@ However, sample account from testing is already mentioned there.
 
 ## Working
 
-#### Ride Profile
+#### Rider Profile
 
 Upon successful login, user will be redirected to the profile page with following information:
 
