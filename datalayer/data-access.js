@@ -92,7 +92,7 @@ exports.getRides = function (rider_id, callback) {
     });
 }
 
-function checkRide(rider_id, dbo, record, callback) {
+var checkRide = (rider_id, dbo, record, callback) => {
     var query = { RequestId: record.request_id };
     dbo.collection("UserRide").find(query).toArray(function (err, result) {
         if (err) {

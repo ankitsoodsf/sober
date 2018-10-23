@@ -151,7 +151,7 @@ app.get('/synchistory', function (req, res) {
 });
 
 //Get Ride history from Uber
-function getUberHistory(rider_id, count, offset, limit, callback) {
+var getUberHistory = (rider_id, count, offset, limit, callback) => {
     uber.user.getHistory(offset, limit, function (error, result) {
         if (error) {
             console.log(error);
