@@ -43,7 +43,6 @@ app.get('/', function(req,res){
 
 //On clicking Login redirect to Uber
 app.post('/login', function(req, res){
-    
     //Get Authorization URL
     var authURL = uber.getAuthorizeUrl(['history', 'profile']);
     res.redirect(authURL);
@@ -72,7 +71,6 @@ app.get('/login/callback', function(req, res){
 
 //Get Profile Information
 app.get('/profile', function(req,res){
-
     uber.user.getProfile(function(error, result) {
         if (error) {
             res.redirect('/error');
@@ -86,6 +84,7 @@ app.get('/profile', function(req,res){
                                 PromoCode: result.promo_code,
                                 MobileVerified: result.mobile_verified };
 
+            getUberHistory(req.session.rider_id, 0, 0, limit);
             res.locals = { title: 'Sober - Rider Profile', login: true };
             res.render('profile.ejs', profileInfo);
         }
