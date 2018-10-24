@@ -4,7 +4,7 @@ var async = require("async");
 var common = require("../common/common");
 var dbo;
 
-const connection = MongoClient.connect(config.mongourl, { useNewUrlParser: true }, function (err, db) {
+const connection = MongoClient.connect(config.mongourl, { useNewUrlParser: true }, (err, db) => {
     if (err)
         console.log(err);
     else
@@ -12,11 +12,11 @@ const connection = MongoClient.connect(config.mongourl, { useNewUrlParser: true 
 });
 
 //Insert User in MongoDb
-exports.insertUser = function (object) {
+exports.insertUser = (object) => {
 
     var data = object;
     var query = { RiderId: data.rider_id };
-    dbo.collection("User").find(query).toArray(function (err, result) {
+    dbo.collection("User").find(query).toArray((err, result) => {
         if (err) {
             return 0;
         }
@@ -31,7 +31,7 @@ exports.insertUser = function (object) {
                 MobileVerified: data.mobile_verified
             };
 
-            dbo.collection("User").insertOne(myobj, function (err, res) {
+            dbo.collection("User").insertOne(myobj, (err, res) => {
                 if (err) {
                     return 0;
                 }
@@ -48,7 +48,7 @@ exports.insertUser = function (object) {
                 }
             };
 
-            dbo.collection("User").updateOne(query, myobj, function (err, res) {
+            dbo.collection("User").updateOne(query, myobj, (err, res) => {
                 if (err) {
                     return 0;
                 }
@@ -58,43 +58,43 @@ exports.insertUser = function (object) {
 }
 
 //Insert Rides in MongoDb
-exports.insertRides = function (rider_id, object) {
+exports.insertRides = (rider_id, object) => {
 
-    async.each(object, function (item, callback) {
+    async.each(object, (item, callback) => {
 
-        checkRide(rider_id, dbo, item, function () {
+        checkRide(rider_id, dbo, item, () => {
             callback();
         });
     },
-        function (err) {
+        (err) => {
             return 1;
         }
     );
 }
 
 //Get Rides from MongoDb
-exports.getRides = function (rider_id, callback) {
+exports.getRides = (rider_id, callback) => {
 
     var rides = [];
     async.waterfall([
 
-        function (cb) {
+        (cb) => {
             var query = { RiderId: rider_id };
             dbo.collection("UserRide").find(query).toArray(cb);
         },
-        function (results, cb) {
+        (results, cb) => {
             rides = results;
             cb(null);
         }
 
-    ], function (err, results) {
+    ], (err, results) => {
         callback(rides);
     });
 }
 
 var checkRide = (rider_id, dbo, record, callback) => {
     var query = { RequestId: record.request_id };
-    dbo.collection("UserRide").find(query).toArray(function (err, result) {
+    dbo.collection("UserRide").find(query).toArray((err, result) => {
         if (err) {
             return 0;
         }
@@ -116,7 +116,7 @@ var checkRide = (rider_id, dbo, record, callback) => {
                 }
             };
 
-            dbo.collection("UserRide").insertOne(myobj, function (err, res) {
+            dbo.collection("UserRide").insertOne(myobj, (err, res) => {
                 if (err) {
                     return 0;
                 }

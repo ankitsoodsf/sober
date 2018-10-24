@@ -27,7 +27,7 @@ app.set('layout extractScripts', true);
 app.set('layout extractStyles', true);
 
 app.use(session({ secret: 'sober' }));
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     if (typeof (req.session.rider_id) == 'undefined') {
         req.session.rider_id = '';
     }
@@ -37,20 +37,20 @@ app.use(favicon('./favicon.ico'));
 app.use(expressLayouts);
 
 //Root URL
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.locals = { title: 'Sober - Login', login: false };
     res.render('login.ejs');
 });
 
 //On clicking Login redirect to Uber
-app.post('/login', function (req, res) {
+app.post('/login', (req, res) => {
     //Get Authorization URL
     var authURL = uber.getAuthorizeUrl(['history', 'profile']);
     res.redirect(authURL);
 });
 
 //Get response from Uber
-app.get('/login/callback', function (req, res) {
+app.get('/login/callback', (req, res) => {
 
     var queryString = url.parse(req.url, true).query;
     var authCode = '';
@@ -60,7 +60,7 @@ app.get('/login/callback', function (req, res) {
 
     uber.authorization({
         authorization_code: authCode
-    }, function (error, result) {
+    }, (error, result) => {
         if (error) {
             res.redirect('/error');
         } else {
@@ -71,8 +71,8 @@ app.get('/login/callback', function (req, res) {
 });
 
 //Get Profile Information
-app.get('/profile', function (req, res) {
-    uber.user.getProfile(function (error, result) {
+app.get('/profile', (req, res) => {
+    uber.user.getProfile((error, result) => {
         if (error) {
             res.redirect('/error');
         } else {
@@ -95,7 +95,7 @@ app.get('/profile', function (req, res) {
 });
 
 //Get Ride history from database
-app.get('/history', function (req, res) {
+app.get('/history', (req, res) => {
 
     if (req.session.rider_id == 'undefined' || req.session.rider_id == '') {
         res.redirect('/error');
@@ -105,14 +105,14 @@ app.get('/history', function (req, res) {
     var rides = [];
     async.waterfall([
 
-        function (cb) {
+        (cb) => {
             dataAccess.getRides(req.session.rider_id, cb);
         },
-        function (rides, cb) {
+        (rides, cb) => {
             cb(null);
         }
 
-    ], function (err, results) {
+    ], (err, results) => {
         rides = err;
         res.locals = { title: 'Sober - Ride History', login: true };
         res.render('history.ejs', { rides: JSON.stringify(rides) });
@@ -120,7 +120,7 @@ app.get('/history', function (req, res) {
 });
 
 //Get Ride history from database (Map View)
-app.get('/mapview', function (req, res) {
+app.get('/mapview', (req, res) => {
 
     if (req.session.rider_id == 'undefined' || req.session.rider_id == '') {
         res.redirect('/error');
@@ -130,11 +130,11 @@ app.get('/mapview', function (req, res) {
     var rides = [];
     async.waterfall([
 
-        function (cb) {
+        (cb) => {
             dataAccess.getRides(req.session.rider_id, cb);
         }
 
-    ], function (err, results) {
+    ], (err, results) => {
         rides = err;
         res.locals = { title: 'Sober - Ride History', login: true };
         res.render('map.ejs', { rides: JSON.stringify(rides) });
@@ -144,7 +144,7 @@ app.get('/mapview', function (req, res) {
 //Sync Ride history in database
 var count, fetched = 0;
 var limit = 50;
-app.get('/synchistory', function (req, res) {
+app.get('/synchistory', (req, res) => {
 
     getUberHistory(req.session.rider_id, 0, 0, limit);
     res.redirect('/history');
@@ -152,7 +152,7 @@ app.get('/synchistory', function (req, res) {
 
 //Get Ride history from Uber
 var getUberHistory = (rider_id, count, offset, limit, callback) => {
-    uber.user.getHistory(offset, limit, function (error, result) {
+    uber.user.getHistory(offset, limit, (error, result) => {
         if (error) {
             console.log(error);
         } else {
@@ -172,8 +172,8 @@ var getUberHistory = (rider_id, count, offset, limit, callback) => {
 }
 
 //Logout and Clear Uber session
-app.get('/logout', function (req, res) {
-    uber.revokeToken(uber.access_token, function (error, result) {
+app.get('/logout', (req, res) => {
+    uber.revokeToken(uber.access_token, (error, result) => {
         if (error) {
             console.log(error);
         } else {
@@ -184,12 +184,12 @@ app.get('/logout', function (req, res) {
     });
 });
 
-app.get('/error', function (req, res) {
+app.get('/error', (req, res) => {
     res.locals = { title: 'Sober - Something went wrong', login: false };
     res.render('error.ejs');
 });
 
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
     if (req.url.match('\.css$')) {
         var cssPath = path.join(__dirname, req.url);
         var fileStream = fs.createReadStream(cssPath, "UTF-8");
@@ -198,7 +198,7 @@ app.get('*', function (req, res) {
     }
 });
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.redirect('/error');
 });
 

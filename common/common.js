@@ -1,5 +1,5 @@
 
-exports.formatDate = function (date) {
+exports.formatDate = (date) => {
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var ampm = hours >= 12 ? 'PM' : 'AM';
