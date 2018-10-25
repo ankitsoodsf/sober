@@ -1,19 +1,20 @@
 
 exports.formatDate = (date) => {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
 
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    month = month < 10 ? '0' + month : month;
-    day = day < 10 ? '0' + day : day;
+  hours %= 12;
+  hours = hours || 12;
+  hours = hours < 10 ? `0${hours}` : hours;
+  minutes = minutes < 10 ? `0${minutes}` : minutes;
+  const strTime = `${hours}:${minutes} ${ampm}`;
 
-    return formattedDate = month + "/" + day + "/" + date.getFullYear() + " " + strTime;
-}
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  month = month < 10 ? `0${month}` : month;
+  day = day < 10 ? `0${day}` : day;
+
+  const formattedDate = `${month}/${day}/${date.getFullYear()} ${strTime}`;
+  return formattedDate;
+};
